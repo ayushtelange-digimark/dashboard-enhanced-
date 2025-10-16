@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayush Demo Store - Case Study Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px;
+            position: relative;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        /* Slide 1: Title */
+        .slide-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+        }
+        
+        .slide-1 h1 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .slide-1 .subtitle {
+            font-size: 28px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .slide-1 .tagline {
+            font-size: 20px;
+            font-style: italic;
+            opacity: 0.8;
+            animation: fadeInUp 1.2s ease;
+        }
+        
+        .slide-1 .author {
+            margin-top: 60px;
+            font-size: 24px;
+            font-weight: 600;
+            animation: fadeInUp 1.4s ease;
+        }
+        
+        /* Slide 2: Overview */
+        .slide-2 {
+            background: #16213e;
+        }
+        
+        .slide-title {
+            font-size: 48px;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .metrics-showcase {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+        
+        .metric-box {
+            background: rgba(255,255,255,0.05);
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .metric-box:hover {
+            transform: translateY(-10px);
+            border-color: #667eea;
+        }
+        
+        .metric-box .number {
+            font-size: 56px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+        
+        .metric-box .label {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+        
+        /* Slide 3: The Challenge */
+        .slide-3 {
+            background: #0f3460;
+        }
+        
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+        }
+        
+        .challenge-card {
+            background: rgba(255,255,255,0.05);
+            padding: 35px;
+            border-radius: 16px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .challenge-card h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        
+        .challenge-card ul {
+            list-style: none;
+        }
+        
+        .challenge-card li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .challenge-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #764ba2;
+            font-weight: bold;
+        }
+        
+        /* Slide 4: The Solution */
+        .slide-4 {
+            background: #16213e;
+        }
+        
+        .timeline {
+            width: 100%;
+            position: relative;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: flex-start;
+        }
+        
+        .timeline-marker {
+            min-width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 16px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .timeline-content h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .timeline-content p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* Slide 5: The Results */
+        .slide-5 {
+            background: #0f3460;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+        
+        .result-card {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+        
+        .result-card .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .result-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .result-card .stat {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        /* Slide 6: Skills */
+        .slide-6 {
+            background: #16213e;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+        
+        .skill-category {
+            background: rgba(255,255,255,0.05);
+            padding: 35px;
+            border-radius: 16px;
+            border-top: 4px solid #667eea;
+        }
+        
+        .skill-category h3 {
+            font-size: 26px;
+            margin-bottom: 25px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .skill-category .skill-icon {
+            font-size: 32px;
+        }
+        
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .skill-tag {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Slide 7: Next Steps */
+        .slide-7 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+        }
+        
+        .next-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+            margin-top: 50px;
+        }
+        
+        .next-step {
+            background: rgba(255,255,255,0.15);
+            padding: 35px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .next-step .step-number {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        
+        .next-step h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .next-step p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* Slide 8: Call to Action */
+        .slide-8 {
+            background: #1a1a2e;
+            text-align: center;
+        }
+        
+        .cta-content h2 {
+            font-size: 56px;
+            margin-bottom: 30px;
+        }
+        
+        .cta-content p {
+            font-size: 24px;
+            opacity: 0.8;
+            margin-bottom: 50px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .cta-button-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid #667eea;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.3);
+            border: 2px solid #667eea;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-button:hover {
+            background: #667eea;
+            transform: scale(1.1);
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(102, 126, 234, 0.3);
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: 2px solid #667eea;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 20px;
+            }
+            
+            .slide-1 h1 {
+                font-size: 40px;
+            }
+            
+            .slide-title {
+                font-size: 32px;
+            }
+            
+            .metrics-showcase,
+            .results-grid,
+            .skills-grid,
+            .next-steps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .challenge-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide slide-1">
+            <h1>🚀 AYUSH DEMO STORE</h1>
+            <p class="subtitle">Building a Profitable E-Commerce Platform</p>
+            <p class="tagline">From Concept to Conversion: A Complete Case Study</p>
+            <p class="author">Presented by Ayush</p>
+        </div>
+        
+        <!-- Slide 2: At a Glance -->
+        <div class="slide slide-2">
+            <h2 class="slide-title">📊 Project at a Glance</h2>
+            <div class="metrics-showcase">
+                <div class="metric-box">
+                    <div class="number">1.3%</div>
+                    <div class="label">Conversion Rate</div>
+                </div>
+                <div class="metric-box">
+                    <div class="number">77</div>
+                    <div class="label">Sessions Tracked</div>
+                </div>
+                <div class="metric-box">
+                    <div class="number">11</div>
+                    <div class="label">Products</div>
+                </div>
+                <div class="metric-box">
+                    <div class="number">3</div>
+                    <div class="label">Orders Fulfilled</div>
+                </div>
+                <div class="metric-box">
+                    <div class="number">3.9%</div>
+                    <div class="label">Add-to-Cart Rate</div>
+                </div>
+                <div class="metric-box">
+                    <div class="number">8</div>
+                    <div class="label">Collections</div>
+                </div>
+                <div class="metric-box">
+                    <div class="number">24%</div>
+                    <div class="label">Session Growth</div>
+                </div>
+                <div class="metric-box">
+                    <div class="number">3</div>
+                    <div class="label">Geographic Locations</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: The Challenge -->
+        <div class="slide slide-3">
+            <h2 class="slide-title">🎯 The Challenge</h2>
+            <div class="challenge-grid">
+                <div class="challenge-card">
+                    <h3>Business Objective</h3>
+                    <ul>
+                        <li>Build a fully functional e-commerce store</li>
+                        <li>Demonstrate end-to-end capabilities</li>
+                        <li>Achieve industry-standard metrics</li>
+                        <li>Process real transactions</li>
+                        <li>Create scalable infrastructure</li>
+                    </ul>
+                </div>
+                <div class="challenge-card">
+                    <h3>Technical Requirements</h3>
+                    <ul>
+                        <li>Multi-category product management</li>
+                        <li>International payment processing</li>
+                        <li>Comprehensive analytics tracking</li>
+                        <li>Mobile-responsive design</li>
+                        <li>Conversion-optimized checkout</li>
+                    </ul>
+                </div>
+                <div class="challenge-card">
+                    <h3>Marketing Goals</h3>
+                    <ul>
+                        <li>Drive qualified traffic to store</li>
+                        <li>Optimize conversion funnel</li>
+                        <li>Build international customer base</li>
+                        <li>Implement SEO best practices</li>
+                        <li>Create brand identity</li>
+                    </ul>
+                </div>
+                <div class="challenge-card">
+                    <h3>Success Criteria</h3>
+                    <ul>
+                        <li>1%+ conversion rate achieved</li>
+                        <li>Real orders processed successfully</li>
+                        <li>Analytics fully operational</li>
+                        <li>Multi-region capability proven</li>
+                        <li>Scalable for future growth</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: The Solution -->
+        <div class="slide slide-4">
+            <h2 class="slide-title">💡 The Solution: My Approach</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <h3>Foundation & Setup</h3>
+                        <p>Configured Shopify platform with custom domain, payment gateway integration, and multi-region shipping. Launched with 3 core products and established brand identity: "Style. Sip. Step." Implemented comprehensive analytics from day one to track all user behavior.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <h3>Product Scaling & Organization</h3>
+                        <p>Expanded catalog 266% from 3 to 11 products across 9 diverse categories (Fashion, Home, Tech, Wellness). Created 8-collection architecture with tag-based navigation system. Developed SEO-optimized descriptions and strategic pricing.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <h3>Optimization & Conversion</h3>
+                        <p>Implemented conversion optimization tactics: streamlined checkout, trust signals, clear shipping info, and mobile responsiveness. Achieved 3.9% add-to-cart rate through data-driven page optimization and strategic product placement.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <h3>Traffic & Results</h3>
+                        <p>Generated 77+ sessions across 3 geographic locations (US, India). Processed 3 successful orders achieving 1.3% conversion rate. Documented 24% session growth and established foundation for email marketing and mobile optimization.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: The Results -->
+        <div class="slide slide-5">
+            <h2 class="slide-title">🏆 The Results</h2>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="icon">🎯</div>
+                    <h3>Conversion Success</h3>
+                    <div class="stat">1.3%</div>
+                    <p>Industry benchmark achieved with real customer transactions</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">📈</div>
+                    <h3>Growth Rate</h3>
+                    <div class="stat">266%</div>
+                    <p>Product catalog expansion demonstrating scalability</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">🛒</div>
+                    <h3>Engagement</h3>
+                    <div class="stat">3.9%</div>
+                    <p>Add-to-cart rate showing strong product appeal</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">🌍</div>
+                    <h3>International Reach</h3>
+                    <div class="stat">2</div>
+                    <p>Countries (US, India) with multi-region operations</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">📦</div>
+                    <h3>Real Orders</h3>
+                    <div class="stat">3</div>
+                    <p>Fulfilled transactions validating complete sales cycle</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">📊</div>
+                    <h3>Data Tracking</h3>
+                    <div class="stat">77+</div>
+                    <p>Sessions monitored across complete conversion funnel</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Skills Demonstrated -->
+        <div class="slide slide-6">
+            <h2 class="slide-title">💼 Skills Demonstrated</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3><span class="skill-icon">⚙️</span> Technical Development</h3>
+                    <div class="skill-list">
+                        <span class="skill-tag">Shopify Platform</span>
+                        <span class="skill-tag">Payment Integration</span>
+                        <span class="skill-tag">Multi-Region Setup</span>
+                        <span class="skill-tag">Theme Customization</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                        <span class="skill-tag">Responsive Design</span>
+                        <span class="skill-tag">Performance Optimization</span>
+                        <span class="skill-tag">API Integration</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><span class="skill-icon">📊</span> Analytics & Data</h3>
+                    <div class="skill-list">
+                        <span class="skill-tag">Conversion Tracking</span>
+                        <span class="skill-tag">Funnel Analysis</span>
+                        <span class="skill-tag">Customer Segmentation</span>
+                        <span class="skill-tag">Geographic Analytics</span>
+                        <span class="skill-tag">KPI Monitoring</span>
+                        <span class="skill-tag">Data Visualization</span>
+                        <span class="skill-tag">Cohort Analysis</span>
+                        <span class="skill-tag">Dashboard Creation</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><span class="skill-icon">🎯</span> Digital Marketing</h3>
+                    <div class="skill-list">
+                        <span class="skill-tag">SEO Optimization</span>
+                        <span class="skill-tag">Conversion Rate Optimization</span>
+                        <span class="skill-tag">Email Marketing</span>
+                        <span class="skill-tag">Customer Journey Mapping</span>
+                        <span class="skill-tag">Content Strategy</span>
+                        <span class="skill-tag">Brand Development</span>
+                        <span class="skill-tag">Traffic Generation</span>
+                        <span class="skill-tag">A/B Testing</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><span class="skill-icon">📦</span> Product Management</h3>
+                    <div class="skill-list">
+                        <span class="skill-tag">Catalog Strategy</span>
+                        <span class="skill-tag">Inventory Management</span>
+                        <span class="skill-tag">Collection Architecture</span>
+                        <span class="skill-tag">Pricing Strategy</span>
+                        <span class="skill-tag">Product Positioning</span>
+                        <span class="skill-tag">Category Management</span>
+                        <span class="skill-tag">Growth Planning</span>
+                        <span class="skill-tag">Multi-Category Operations</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 7: Next Steps -->
+        <div class="slide slide-7">
+            <h2 class="slide-title" style="color: white;">🚀 Optimization Roadmap</h2>
+            <div class="next-steps-grid">
+                <div class="next-step">
+                    <div class="step-number">01</div>
+                    <h3>Mobile Optimization</h3>
+                    <p>Currently at 0% mobile traffic. Implementing mobile-first design and marketing to capture 60% of e-commerce market.</p>
+                </div>
+                <div class="next-step">
+                    <div class="step-number">02</div>
+                    <h3>Email Marketing</h3>
+                    <p>Launching cart abandonment automation to recover 10-15% of 3.9% add-to-cart rate through strategic email sequences.</p>
+                </div>
+                <div class="next-step">
+                    <div class="step-number">03</div>
+                    <h3>Content Marketing</h3>
+                    <p>Creating SEO-optimized blog content to drive organic traffic and establish thought leadership in lifestyle categories.</p>
+                </div>
+                <div class="next-step">
+                    <div class="step-number">04</div>
+                    <h3>Product Expansion</h3>
+                    <p>Scaling from 11 to 20+ products based on performance data and customer demand in high-converting categories.</p>
+                </div>
+                <div class="next-step">
+                    <div class="step-number">05</div>
+                    <h3>Paid Advertising</h3>
+                    <p>Testing Google Ads and Facebook campaigns with small budget to validate customer acquisition costs and ROAS.</p>
+                </div>
+                <div class="next-step">
+                    <div class="step-number">06</div>
+                    <h3>Customer Retention</h3>
+                    <p>Implementing loyalty program and post-purchase engagement to increase customer lifetime value and repeat rate.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Call to Action -->
+        <div class="slide slide-8">
+            <div class="cta-content">
+                <h2>Let's Connect</h2>
+                <p>I built this to demonstrate my capabilities.<br>Now I'm ready to build something for you.</p>
+                <div class="cta-buttons">
+                    <a href="#" class="cta-button cta-button-primary">📊 View Live Dashboard</a>
+                    <a href="#" class="cta-button cta-button-secondary">🛍️ Visit Store</a>
+                    <a href="#" class="cta-button cta-button-secondary">💼 View Portfolio</a>
+                    <a href="#" class="cta-button cta-button-secondary">📧 Contact Me</a>
+                </div>
+                <div style="margin-top: 60px; opacity: 0.7;">
+                    <p style="font-size: 18px;">Thank you for your time!</p>
+                    <p style="font-size: 16px; margin-top: 10px;">Questions?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="nav">
+        <button class="nav-button" onclick="previousSlide()">←</button>
+        <button class="nav-button" onclick="nextSlide()">→</button>
+    </div>
+    
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / 8
+    </div>
+    
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+        
+        function updateSlide() {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((slide, index) => {
+                if (index + 1 === currentSlide) {
+                    slide.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            document.getElementById('current-slide').textContent = currentSlide;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+        
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+        
+        // Track scroll position
+        let isScrolling;
+        window.addEventListener('scroll', () => {
+            clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => {
+                const slides = document.querySelectorAll('.slide');
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+                        currentSlide = index + 1;
+                        document.getElementById('current-slide').textContent = currentSlide;
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
