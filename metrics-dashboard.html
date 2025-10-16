@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayush Demo Store - Performance Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #1a202c;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #718096;
+            font-size: 16px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+        
+        .metric-label {
+            color: #718096;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        
+        .metric-change {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .metric-change.positive {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .metric-change.neutral {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+        
+        .chart-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+        
+        .funnel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .funnel-stage {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .funnel-bar-container {
+            flex: 1;
+            background: #f7fafc;
+            border-radius: 8px;
+            height: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .funnel-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            color: white;
+            font-weight: 600;
+            transition: width 1s ease;
+        }
+        
+        .funnel-label {
+            min-width: 150px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .funnel-stats {
+            min-width: 100px;
+            text-align: right;
+        }
+        
+        .funnel-percentage {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .funnel-count {
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .location-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .location-item:last-child {
+            border-bottom: none;
+        }
+        
+        .location-name {
+            font-weight: 500;
+            color: #2d3748;
+        }
+        
+        .location-bar {
+            flex: 1;
+            margin: 0 15px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .location-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+        
+        .location-value {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .product-item:hover {
+            transform: translateX(5px);
+            background: #edf2f7;
+        }
+        
+        .product-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+        
+        .product-name {
+            flex: 1;
+            font-weight: 500;
+            color: #2d3748;
+        }
+        
+        .product-category {
+            padding: 4px 12px;
+            background: white;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .footer {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .footer p {
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+            
+            .funnel-stage {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .funnel-label, .funnel-stats {
+                min-width: auto;
+                text-align: left;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .metric-card, .chart-section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .badge-primary {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 Ayush Demo Store - Performance Dashboard</h1>
+            <p>E-Commerce Analytics & Metrics Overview | Last Updated: October 2025</p>
+        </div>
+        
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Sessions</div>
+                <div class="metric-value">77</div>
+                <span class="metric-change positive">↑ 24% Growth</span>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Conversion Rate</div>
+                <div class="metric-value">1.3%</div>
+                <span class="metric-change positive">Industry Standard ✓</span>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Orders Fulfilled</div>
+                <div class="metric-value">3</div>
+                <span class="metric-change positive">Real Conversions</span>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Add to Cart Rate</div>
+                <div class="metric-value">3.9%</div>
+                <span class="metric-change positive">Strong Performance</span>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Products</div>
+                <div class="metric-value">11</div>
+                <span class="metric-change positive">↑ 266% Growth</span>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Collections</div>
+                <div class="metric-value">8</div>
+                <span class="metric-change neutral">Organized</span>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Categories</div>
+                <div class="metric-value">9</div>
+                <span class="metric-change neutral">Multi-Niche</span>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Geographic Reach</div>
+                <div class="metric-value">3</div>
+                <span class="metric-change positive">Locations</span>
+            </div>
+        </div>
+        
+        <!-- Conversion Funnel -->
+        <div class="chart-section">
+            <h2 class="chart-title">🎯 Conversion Funnel Performance</h2>
+            <div class="funnel-container">
+                <div class="funnel-stage">
+                    <div class="funnel-label">Sessions</div>
+                    <div class="funnel-bar-container">
+                        <div class="funnel-bar" style="width: 100%;">
+                            100% (77 visitors)
+                        </div>
+                    </div>
+                    <div class="funnel-stats">
+                        <div class="funnel-percentage">100%</div>
+                        <div class="funnel-count">77 users</div>
+                    </div>
+                </div>
+                
+                <div class="funnel-stage">
+                    <div class="funnel-label">Added to Cart</div>
+                    <div class="funnel-bar-container">
+                        <div class="funnel-bar" style="width: 3.9%;">
+                            3.9%
+                        </div>
+                    </div>
+                    <div class="funnel-stats">
+                        <div class="funnel-percentage">3.9%</div>
+                        <div class="funnel-count">3 users</div>
+                    </div>
+                </div>
+                
+                <div class="funnel-stage">
+                    <div class="funnel-label">Reached Checkout</div>
+                    <div class="funnel-bar-container">
+                        <div class="funnel-bar" style="width: 1.3%;">
+                            1.3%
+                        </div>
+                    </div>
+                    <div class="funnel-stats">
+                        <div class="funnel-percentage">1.3%</div>
+                        <div class="funnel-count">1 user</div>
+                    </div>
+                </div>
+                
+                <div class="funnel-stage">
+                    <div class="funnel-label">Completed Purchase</div>
+                    <div class="funnel-bar-container">
+                        <div class="funnel-bar" style="width: 1.3%;">
+                            1.3%
+                        </div>
+                    </div>
+                    <div class="funnel-stats">
+                        <div class="funnel-percentage">1.3%</div>
+                        <div class="funnel-count">1 order</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Two Column Layout -->
+        <div class="grid-2col">
+            <!-- Geographic Distribution -->
+            <div class="chart-section">
+                <h2 class="chart-title">🌍 Geographic Distribution</h2>
+                <div class="location-item">
+                    <span class="location-name">United States (Iowa)</span>
+                    <div class="location-bar">
+                        <div class="location-fill" style="width: 95%;"></div>
+                    </div>
+                    <span class="location-value">73 sessions (95%)</span>
+                </div>
+                <div class="location-item">
+                    <span class="location-name">India (Chhattisgarh)</span>
+                    <div class="location-bar">
+                        <div class="location-fill" style="width: 2.6%;"></div>
+                    </div>
+                    <span class="location-value">2 sessions (2.6%)</span>
+                </div>
+                <div class="location-item">
+                    <span class="location-name">India (Madhya Pradesh)</span>
+                    <div class="location-bar">
+                        <div class="location-fill" style="width: 2.6%;"></div>
+                    </div>
+                    <span class="location-value">2 sessions (2.6%)</span>
+                </div>
+            </div>
+            
+            <!-- Product Catalog -->
+            <div class="chart-section">
+                <h2 class="chart-title">📦 Product Catalog Overview</h2>
+                <div class="product-list">
+                    <div class="product-item">
+                        <div class="product-number">1</div>
+                        <div class="product-name">Classic White T-Shirt</div>
+                        <div class="product-category">Fashion</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">2</div>
+                        <div class="product-name">Urban Style Sneakers</div>
+                        <div class="product-category">Fashion</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">3</div>
+                        <div class="product-name">Coffee Mug</div>
+                        <div class="product-category">Lifestyle</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">4</div>
+                        <div class="product-name">Travel Tumbler</div>
+                        <div class="product-category">Lifestyle</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">5</div>
+                        <div class="product-name">Wall Art Poster</div>
+                        <div class="product-category">Home Decor</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">6</div>
+                        <div class="product-name">Ceramic Vase</div>
+                        <div class="product-category">Home Decor</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">7</div>
+                        <div class="product-name">Portable Blender</div>
+                        <div class="product-category">Kitchen</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">8</div>
+                        <div class="product-name">Stylish Backpack</div>
+                        <div class="product-category">Tech</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">9</div>
+                        <div class="product-name">LED Desk Lamp</div>
+                        <div class="product-category">Office</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">10</div>
+                        <div class="product-name">Wireless Earbuds</div>
+                        <div class="product-category">Audio</div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-number">11</div>
+                        <div class="product-name">Oil Diffuser</div>
+                        <div class="product-category">Wellness</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Key Achievements -->
+        <div class="chart-section">
+            <h2 class="chart-title">🏆 Key Achievements & Skills Demonstrated</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div style="padding: 20px; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px; font-size: 16px;">✅ Product Management</h3>
+                    <p style="color: #4a5568; font-size: 14px;">Scaled catalog from 3 to 11 products (266% growth) across 9 categories with organized collection architecture.</p>
+                </div>
+                <div style="padding: 20px; background: #f7fafc; border-radius: 8px; border-left: 4px solid #764ba2;">
+                    <h3 style="color: #764ba2; margin-bottom: 10px; font-size: 16px;">✅ Conversion Optimization</h3>
+                    <p style="color: #4a5568; font-size: 14px;">Achieved 1.3% conversion rate with 3 fulfilled orders, meeting industry benchmarks for new stores.</p>
+                </div>
+                <div style="padding: 20px; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px; font-size: 16px;">✅ Analytics Implementation</h3>
+                    <p style="color: #4a5568; font-size: 14px;">Comprehensive tracking of 77 sessions across 3 locations with complete conversion funnel visibility.</p>
+                </div>
+                <div style="padding: 20px; background: #f7fafc; border-radius: 8px; border-left: 4px solid #764ba2;">
+                    <h3 style="color: #764ba2; margin-bottom: 10px; font-size: 16px;">✅ Multi-Category Strategy</h3>
+                    <p style="color: #4a5568; font-size: 14px;">Successfully managed diverse product lines: Fashion, Home, Tech, Audio, and Wellness categories.</p>
+                </div>
+                <div style="padding: 20px; background: #f7fafc; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 10px; font-size: 16px;">✅ Growth Trajectory</h3>
+                    <p style="color: #4a5568; font-size: 14px;">24% session growth with strong engagement metrics (3.9% add-to-cart rate) demonstrating effective optimization.</p>
+                </div>
+                <div style="padding: 20px; background: #f7fafc; border-radius: 8px; border-left: 4px solid #764ba2;">
+                    <h3 style="color: #764ba2; margin-bottom: 10px; font-size: 16px;">✅ International Operations</h3>
+                    <p style="color: #4a5568; font-size: 14px;">Configured for multi-region shipping and tracking across US and India markets.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Ayush Demo Store</strong> | Shopify E-Commerce Project | Built with expertise in product management, analytics, and conversion optimization</p>
+            <p style="margin-top: 10px;">This dashboard demonstrates real e-commerce performance with actual conversions and data-driven insights.</p>
+        </div>
+    </div>
+</body>
+</html>
